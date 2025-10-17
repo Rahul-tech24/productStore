@@ -35,6 +35,39 @@ const useProductStore = create((set) => ({
         } catch (error) {
             console.error("Error fetching products:", error);
         }
+    },
+    updateProduct: async (id, updates) => {
+        if (!id) {
+            throw new Error("Product id is required to update");
+        }
+        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updates),
+        });
+        if (!res.ok) {
+            throw new Error("Failed to update product");
+        }
+        const updated = await res.json();
+        set((state) => ({
+            products: state.products.map((p) => (p._id === updated._id ? updated : p)),
+        }));
+        return { success: true, message: "Product updated successfully" };
+    },
+    deleteProduct: async (id) => {
+        if (!id) {
+            throw new Error("Product id is required to delete");
+        }
+        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+            method: "DELETE",
+        });
+        if (!res.ok) {
+            throw new Error("Failed to delete product");
+        }
+        set((state) => ({ products: state.products.filter((p) => p._id !== id) }));
+        return { success: true, message: "Product deleted successfully" };
     }
     
    
@@ -43,6 +76,3 @@ const useProductStore = create((set) => ({
 }));
 
 export default useProductStore;
-
-
-

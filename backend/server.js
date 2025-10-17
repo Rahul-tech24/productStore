@@ -9,7 +9,7 @@ const app = express();
 import cors from 'cors';
 
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "http://localhost:5174" }));
 
 
 app.use(express.json());
